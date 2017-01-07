@@ -35,6 +35,10 @@ public class SudokuValue {
 		}
 	}
 
+	public boolean containsNote(int note) {
+		return notes.contains(note);
+	}
+
 	public void addNotes(ArrayList<Integer> notes) {
 		this.notes.addAll(notes);
 	}
@@ -61,10 +65,8 @@ public class SudokuValue {
 		}
 	}
 
-	public void removeNote(int note) {
-		if (notes.contains(note)) {
-			notes.remove((Integer) note);
-		}
+	public boolean removeNote(int note) {
+		return notes.remove((Integer) note);
 	}
 
 	public void removeActualValue() {

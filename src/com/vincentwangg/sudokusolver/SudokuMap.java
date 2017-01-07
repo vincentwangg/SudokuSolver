@@ -179,14 +179,9 @@ public class SudokuMap {
 					for (int i : value.getNotes()) {
 						// If it's the only blank value in its row/col, make sure the number exists in other
 						//   boxes before putting it in
-						if (isOnlyViableValueRowWise(row, col, i)
-								&& doOtherBoxesContainValue(true, row / 3, col / 3, i)) {
-							value.setActualValue(i);
-							configureNotes(row, col);
-							anyBoxesFilled = true;
-						}
-						if (isOnlyViableValueColWise(row, col, i)
-								&& doOtherBoxesContainValue(false, row / 3, col / 3, i)) {
+						if (isOnlyValueWithNoteRowWise(row, col, i)
+								|| isOnlyValueWithNoteColWise(row, col, i)
+								|| isOnlyValueWithNoteInBox(row, col, i)) {
 							value.setActualValue(i);
 							configureNotes(row, col);
 							anyBoxesFilled = true;
@@ -196,6 +191,42 @@ public class SudokuMap {
 			}
 		}
 		return anyBoxesFilled;
+	}
+
+	private boolean isOnlyValueWithNoteInBox(int row, int col, int note) {
+		int rowLowBnd = row / 3;
+		rowLowBnd *= 3;
+		int colLowBnd = col / 3;
+		colLowBnd *= 3;
+		for (int i = rowLowBnd; i < rowLowBnd + 3; i++) {
+			for (int j = colLowBnd; j < colLowBnd + 3; j++) {
+				SudokuValue value = getSudokuValue(i, j);
+				if ((row != i || col != j) && !value.hasActualValue() && value.containsNote(note)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	private boolean isOnlyValueWithNoteColWise(int row, int col, int note) {
+		return isOnlyValueWithNote(false, row, col, note);
+	}
+
+	private boolean isOnlyValueWithNoteRowWise(int row, int col, int note) {
+		return isOnlyValueWithNote(true, row, col, note);
+	}
+
+	private boolean isOnlyValueWithNote(boolean rowWise, int row, int col, int note) {
+		for (int i = 0; i < 9; i++) {
+			if (i != (rowWise ? row : col)) {
+				SudokuValue value = getSudokuValue(rowWise ? row : i, rowWise ? i : col);
+				if (!value.hasActualValue() && value.containsNote(note)) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	public void performGuessPhase() {
@@ -266,44 +297,6 @@ public class SudokuMap {
 	private boolean isValueValid(int valRow, int valCol, int value) {
 		// If value is not in the row or col, then it is valid
 		return !isValueInCol(valCol, value) && !isValueInRow(valRow, value);
-	}
-
-	private boolean doOtherBoxesContainValue(boolean isRow, int boxRow, int boxCol, int value) {
-		boolean[] boxesChecked = new boolean[3];
-		boxesChecked[isRow ? boxCol : boxRow] = true;
-		for (int i = 0; i < boxesChecked.length; i++) {
-			if (!boxesChecked[i] && !boxes[isRow ? boxRow : i][isRow ? i : boxCol].containsValue(value)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	private boolean isOnlyViableValueColWise(int row, int col, int value) {
-		return isOnlyViableValue(false, row, col, value);
-	}
-
-	private boolean isOnlyViableValueRowWise(int row, int col, int value) {
-		return isOnlyViableValue(true, row, col, value);
-	}
-
-	private boolean isOnlyViableValue(boolean rowWise, int row, int col, int value) {
-		int lower = rowWise ? col / 3 : row / 3;
-		lower *= 3;
-		for (int i = lower; i < lower + 3; i++) {
-			boolean isColValid = rowWise
-					&& i != col
-					&& !getSudokuValue(row, i).hasActualValue()
-					&& !isValueInCol(i, value);
-			boolean isRowValid = !rowWise
-					&& i != row
-					&& !getSudokuValue(i, col).hasActualValue()
-					&& !isValueInRow(i, value);
-			if (isRowValid ^ isColValid) {
-				return false;
-			}
-		}
-		return true;
 	}
 
 	/**

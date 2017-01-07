@@ -6,15 +6,15 @@ public class SudokuSolver {
 
 	public static void main(String[] args) {
 		solve(toSudokuMap(
-				"0 0 0 0 0 9 8 3 0\n" +
-						"0 0 0 3 0 0 5 0 6\n" +
-						"0 0 0 5 6 0 0 0 0\n" +
-						"3 4 0 0 0 0 0 0 7\n" +
-						"0 0 1 0 5 0 9 0 0\n" +
-						"9 0 0 0 0 0 0 5 8\n" +
-						"0 0 0 0 1 8 0 0 0\n" +
-						"1 0 9 0 0 4 0 0 0\n" +
-						"0 6 7 9 0 0 0 0 0"));
+				"0 0 0 0 0 8 0 9 0\n" +
+						"4 0 9 5 0 0 0 0 1\n" +
+						"0 0 5 0 0 0 8 0 0\n" +
+						"0 0 0 0 7 0 0 0 2\n" +
+						"0 1 0 6 4 2 0 8 0\n" +
+						"8 0 0 0 1 0 0 0 0\n" +
+						"0 0 3 0 0 0 9 0 0\n" +
+						"5 0 0 0 0 6 2 0 7\n" +
+						"0 6 0 4 0 0 0 0 0"));
 //		solve(toSudokuMap(
 //				"0 0 0 0 4 0 8 0 0\n" +
 //						"0 9 2 3 0 0 0 0 4\n" +
@@ -54,14 +54,18 @@ public class SudokuSolver {
 
 		int counter = 1;
 		while (map.performActPhase()) {
+
+			System.out.println(map);
 			counter++;
 		}
+		System.out.println(map);
+//		System.exit(0);
 		if (map.isCompleted()) {
 			System.out.println("Completed!");
 		}
 		else {
-			System.out.println(map.toStringWithNotes());
-			System.exit(0);
+//			System.out.println(map.toStringWithNotes());
+//			System.exit(0);
 			map.performGuessPhase();
 		}
 
