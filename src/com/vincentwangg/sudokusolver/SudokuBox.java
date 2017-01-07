@@ -16,6 +16,26 @@ public class SudokuBox {
 		}
 	}
 
+	/**
+	 * Copy Constructor
+	 */
+	public SudokuBox(SudokuBox box) {
+		values = new SudokuValue[3][3];
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				values[i][j] = new SudokuValue(box.values[i][j]);
+			}
+		}
+	}
+
+	public void copyBox(SudokuBox sudokuBox) {
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				values[i][j].copyValue(sudokuBox.getValue(i, j));
+			}
+		}
+	}
+
 	public boolean isValid() {
 		BitSet bitSet = new BitSet();
 		for (int i = 0; i < 3; i++) {
@@ -47,6 +67,10 @@ public class SudokuBox {
 	}
 
 	public SudokuValue getValue(int row, int col) {
+		if (row < 0 || row > 2 || col < 0 || col > 2) {
+			throw new IndexOutOfBoundsException("SudokuBox: Row and col ranges are " +
+					"both [0, 2]. Provided row and col: " + row + ", " + col);
+		}
 		return values[row][col];
 	}
 

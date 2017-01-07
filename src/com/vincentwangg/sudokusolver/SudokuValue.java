@@ -9,6 +9,18 @@ public class SudokuValue {
 
 	public SudokuValue() {}
 
+	/**
+	 * Copy Constructor
+	 */
+	public SudokuValue(SudokuValue sudokuValue) {
+		copyValue(sudokuValue);
+	}
+
+	public void copyValue(SudokuValue sudokuValue) {
+		actualValue = sudokuValue.actualValue;
+		notes = sudokuValue.getNotes();
+	}
+
 	public boolean hasActualValue() {
 		return actualValue != 0;
 	}
@@ -21,6 +33,10 @@ public class SudokuValue {
 		if (note <= 9 && note > 0) {
 			notes.add(note);
 		}
+	}
+
+	public void addNotes(ArrayList<Integer> notes) {
+		this.notes.addAll(notes);
 	}
 
 	public ArrayList<Integer> getNotes() {
@@ -49,5 +65,13 @@ public class SudokuValue {
 		if (notes.contains(note)) {
 			notes.remove((Integer) note);
 		}
+	}
+
+	public void removeActualValue() {
+		actualValue = 0;
+	}
+
+	public void clearNotes() {
+		notes.clear();
 	}
 }
